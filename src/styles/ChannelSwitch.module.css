@@ -1,0 +1,86 @@
+.main{
+    text-align: center;
+    margin-top: .1rem;
+}
+
+.btn {
+    width: 100%;
+    height: 4rem;
+    font: inherit;
+    padding: 0.5rem 1.5rem;
+    cursor: pointer;
+    border-radius: 4px;
+    background-color: #714c83;
+    color: white;
+    border: 1px solid #540a78;
+    margin: 0 0rem;
+  }
+  
+  .btn:hover {
+    background-color: #88305c;
+    border-color: #540a78;
+  }
+  
+  .btn--alt {
+    background-color: transparent;
+    color: #813b5e;
+  }
+  
+  .btn--alt:hover {
+    background-color: #f8dae9;
+  }
+  .btnBadge{
+    width: 70%;
+    height: 4rem;
+    font: inherit;
+    border-radius: 40px;
+    background-color: #540a78;
+    color: white;
+    border: 1px solid #540a78;
+    text-align: center;
+    margin-top: 0.5rem;
+  }
+.selected{
+  width: 100%;
+    height: 4rem;
+    font: inherit;
+    padding: 0.5rem 1.5rem;
+    cursor: pointer;
+    border-radius: 4px;
+    background-color: #540a78;
+    color: white;
+    border: 1px solid #540a78;
+    margin: 0 0rem;
+  }
+  .selected:hover {
+    background-color: #94416b;
+    border-color: #9c1458;
+  }
+  
+  .selected--alt {
+    background-color: transparent;
+    color: #800040;
+  }
+  
+  .selected--alt:hover {
+    background-color: #f8dae9;
+  }
+
+
+.badge {
+    background-color: #a05371de;
+    color: white;
+    font-size: 17pt;
+    border-radius: 50px;
+    padding: 0 .5rem;
+    margin-left: 0.5rem;
+  }
+
+.badgeSelected {
+    background-color: #cc2062;
+    color: white;
+    font-size: 17pt;
+    border-radius: 50px;
+    padding: 0 .5rem;
+    margin-left: 0.5rem;
+  }

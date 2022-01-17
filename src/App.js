@@ -1,10 +1,19 @@
-import MyComponet from "./Components/MyComponent";
+import { Route, Routes } from "react-router-dom";
+
+import Layout from "./components/layout/Layout";
+import TranscriptionTool from "./pages/TranscriptionTool";
+import Guidelines from "./pages/Guidelines";
+
+
 
 function App() {
   return (
-    <div >
-      <MyComponet></MyComponet>
-    </div>
+    <Layout>
+      <Routes>
+        <Route path="/" element={<TranscriptionTool />}></Route>
+        <Route path="/guidelines" element={<Guidelines />}></Route>
+      </Routes>
+    </Layout>
   );
 }
 

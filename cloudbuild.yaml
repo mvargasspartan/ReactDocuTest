@@ -1,0 +1,55 @@
+steps:
+
+  - id: "Prepare"
+    name: "gcr.io/cloud-builders/docker"
+    entrypoint: bash
+    args:
+      - "-c"
+      - |
+        # Define vars
+        image_base="gcr.io/${PROJECT_ID}/${_APP_NAME}"
+        image_latest="${image_base}:latest"
+        image_current="${image_base}:${SHORT_SHA}"
+        # Persist vars
+        rm -rf ./vars
+        mkdir -p ./vars
+        echo "${image_latest}" > ./vars/image_latest.txt
+        echo "${image_current}" > ./vars/image_current.txt
+        # Check if images exist and persist result
+        docker pull "${image_latest}" && echo "true" > ./vars/image_latest_exists.txt || true
+        docker pull "${image_current}" && echo "true" > ./vars/image_current_exists.txt || true
+        # Print out vars
+        for file in ./vars/*; do echo "$file=$(cat $file)"; done
+
+
+
+  - id: "Build image"
+    name: gcr.io/cloud-builders/docker
+    entrypoint: bash
+    args:
+      - "-c"
+      - |
+        image_current=$(cat ./vars/image_current.txt)
+        if [ -f ./vars/image_current_exists.txt ]; then
+          echo "Current image '${image_current}' exists. Skip step."
+          exit 0
+        fi
+        image_latest=$(cat ./vars/image_latest.txt)
+        docker build -t ${image_current} -t ${image_latest} -f Dockerfile --cache-from ${image_latest} .
+        docker push ${image_current}
+        docker push ${image_latest}
+
+  - id: "Deploy to Cloud Run"
+    name: gcr.io/cloud-builders/gcloud
+    waitFor: ['Build image']
+    args:
+      - "run"
+      - "deploy"
+      - "${_APP_NAME}"
+      - "--image"
+      - "gcr.io/${PROJECT_ID}/${_APP_NAME}:${SHORT_SHA}"
+      - "--region"
+      - "us-east4"
+      - "--platform"
+      - "managed"
+      - "--allow-unauthenticated"

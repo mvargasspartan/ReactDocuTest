@@ -1,0 +1,14 @@
+.textArea{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1rem;
+    resize: none;
+    width: 90%;
+    color:black;
+    font-size: 1rem;
+}
+
+.h3{
+    text-align: center;
+}

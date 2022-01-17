@@ -1,0 +1,29 @@
+* {
+    box-sizing:border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+.card {
+    position: relative;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    padding: 1rem;
+    width: 90%;
+    height: 4rem;
+    margin-top: 2% ;
+  }
+
+.cardSelected {
+    position: relative;
+    margin: 0 auto;
+    background-color: rgb(199, 197, 197);
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    padding: 1rem;
+    width: 90%;
+    height: 4rem;
+    margin-top: 2% ;
+  }

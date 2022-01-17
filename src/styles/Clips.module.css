@@ -1,0 +1,14 @@
+.divUp {
+    position: relative;
+    top: -5px;
+    text-align: center;
+  }
+
+.divDown {
+    position: relative;
+    top: 2px;
+    text-align: center;
+  }
+.icon {
+  margin-right: 10%;
+}
