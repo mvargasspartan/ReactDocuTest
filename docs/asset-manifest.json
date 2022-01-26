@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/static/css/main.89706f7a.chunk.css",
+    "main.js": "/build/main.d6803e89.js",
+    "runtime-main.js": "/build/bundle.eaded300.js",
+    "build/2.5d284d43.js": "/build/2.5d284d43.js",
+    "build/2.5d284d43.js.LICENSE.txt": "/build/2.5d284d43.js.LICENSE.txt",
+    "index.html": "/index.html",
+    "static/css/main.89706f7a.chunk.css.map": "/static/css/main.89706f7a.chunk.css.map",
+    "static/media/SpartaLogo.6b4c5f53.svg": "/static/media/SpartaLogo.6b4c5f53.svg",
+    "static/media/check.d1a13fd6.svg": "/static/media/check.d1a13fd6.svg",
+    "static/media/guidelines.42fd26b7.md": "/static/media/guidelines.42fd26b7.md",
+    "static/media/pending.60262620.svg": "/static/media/pending.60262620.svg"
+  },
+  "entrypoints": [
+    "build/bundle.eaded300.js",
+    "build/2.5d284d43.js",
+    "static/css/main.89706f7a.chunk.css",
+    "build/main.d6803e89.js"
+  ]
+}
