@@ -4,9 +4,19 @@ import '../styles/AudioPlayerStyles.css';
 import classes from '../styles/AudioPlayerWidget.module.css';
 
 import AppContext from '../store/AppContext.js';
+import PropTypes from 'prop-types';
 
-
+/**
+* Basic audio player component. Uses react h5 audio player.
+*/
 function AudioPlayerWidget(props, ref){
+    AudioPlayerWidget.propTypes = {
+        /** Name of the audio source (clip/ recording). */
+        name: PropTypes.string,
+        /** Complete recording audio blob. */
+        completeAudio: PropTypes.string
+        };
+
     const context = useContext(AppContext);
     const [audio, setAudio] = useState([])
 

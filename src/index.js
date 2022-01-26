@@ -5,7 +5,9 @@ import App from './App';
 import { AppContextProvider } from './store/AppContext';
 
 import './index.css';
-
+/**
+* Starting component.
+*/
 ReactDOM.render(
   <AppContextProvider>
     <BrowserRouter>

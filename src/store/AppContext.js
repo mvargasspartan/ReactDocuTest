@@ -34,6 +34,9 @@ const AppContext = createContext({
     unmarkTranscription: (id) => [],
     deleteClip: (id) => []
 });
+/**
+* This component stores all the app data in a global context, so it can be accessed from any component.
+*/
 export function AppContextProvider(props){
     const [userAudio, setUserAudio] = useState({});
     const [audioName, setAudioName] = useState({});

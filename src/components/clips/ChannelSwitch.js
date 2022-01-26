@@ -1,9 +1,21 @@
 import { useContext, useState } from 'react';
 import { Grid } from "@material-ui/core";
+import PropTypes from 'prop-types';
 import classes from '../../styles/ChannelSwitch.module.css';
 import AppContext from '../../store/AppContext.js';
 
+
+/**
+* Component for switching between the two audio channels (Agent/Client)
+*/
 function ChannelSwitch(props){
+    ChannelSwitch.propTypes = {
+        /** Calls function *toggleAgentClips* of parent component *TranscriptionTool* */
+        toggleAgent: PropTypes.func,
+        /** Calls function *toggleClientClips* of parent component *TranscriptionTool* */
+        toggleClient: PropTypes.func
+        };
+
     const context = useContext(AppContext);
     const [selectedCategory, setSelectedCategory] = useState("agent");
 

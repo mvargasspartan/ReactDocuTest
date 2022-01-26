@@ -5,6 +5,9 @@ import AppContext from '../store/AppContext.js';
 import CardTextArea from "./ui/CardTextArea";
 import classes from '../styles/TranscriptionTextArea.module.css'
 
+/**
+* Component for the text areas, only the text area on the right-hand side is editable.
+*/
 function TranscriptionTextArea(props, ref){
     const context = useContext(AppContext);
     const [generatedTranscription, setGeneratedTranscription] = useState(["Select a clip to start."])

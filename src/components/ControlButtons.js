@@ -1,4 +1,5 @@
 import classes from '../styles/ControlButtons.module.css';
+import PropTypes from 'prop-types';
 import {Grid} from '@material-ui/core';
 import { useContext, useState } from "react";
 import JSZip from 'jszip';
@@ -9,8 +10,16 @@ import Backdrop from './ui/Backdrop';
 import AppContext from '../store/AppContext.js';
 import { saveAs } from 'file-saver';
 
-
+/**
+* Component for rendering all the control buttons ["Delete","Un/Mark clip as correct","Submit Transcription","Save Transcription"]
+*/
 function ControlButtons(props){
+    ControlButtons.propTypes = {
+        /** Function for changing the state of the transcription page ["start","loading","loaded"]. */
+        state: PropTypes.func,
+        /** Function for switching the channel category to Agent. */
+        toggleAgent: PropTypes.func
+        };
 
     const context = useContext(AppContext);
     const [ modalIsOpen, setModalIsOpen] = useState(false);
@@ -84,7 +93,38 @@ function ControlButtons(props){
     }
 
     function saveTranscription(){
-        setModalSave(true);
+
+            const amoutClips = {"agent_clips": context.workStatus["agentTotal"], "client_clips": context.workStatus["clientTotal"]};
+
+            var zip = new JSZip();
+
+            let counter = 0;
+            context.agent_audios.forEach((audio) => {
+
+                const data = audio.file.async("blob").then((data)=>{return data;});
+                let audioStatus = audio.transcribed ? "1" : "0"; 
+                zip.file(`${audioStatus}Agent:part_${counter}.wav`, data);
+                counter++;
+            }) 
+
+            counter = 0;
+            context.client_audios.forEach((audio) => {
+                const data = audio.file.async("blob").then((data)=>{return data;});
+                let audioStatus = audio.transcribed ? "1" : "0"; 
+                zip.file(`${audioStatus}Client:part_${counter}.wav`, data);
+                counter++;
+            })
+
+            zip.file("agentOriginal.json", JSON.stringify(context.agent_original_trans));
+            zip.file("agentFixed.json", JSON.stringify(context.agent_fixed_trans));
+            zip.file("clientOriginal.json", JSON.stringify(context.client_original_trans));
+            zip.file("clientFixed.json", JSON.stringify(context.client_fixed_trans));
+            zip.file("amout.clips.json", JSON.stringify(amoutClips));
+
+            zip.generateAsync({type:"blob"})
+            .then(function(content) {
+                saveAs(content, `WIP-${context.audioName}.zip`);
+            });
     }
 
     function submitSuccess(){
@@ -93,7 +133,7 @@ function ControlButtons(props){
         setModalSubmitSuccess(true);
     }
 
-    function submitLoading(){
+    function submitLoadingModal(){
         setModalSubmitLoading(true);
     }
 
@@ -140,7 +180,7 @@ function ControlButtons(props){
 
         if(clipsAgentDone === clipsAgentTotal & clipsClientDone === clipsClientTotal){
 
-            submitLoading();
+            submitLoadingModal();
 
             let agentTranscriptions = "";
             let clientTranscriptions = "";

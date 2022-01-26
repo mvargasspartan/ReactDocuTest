@@ -5,7 +5,9 @@ import TranscriptionTool from "./pages/TranscriptionTool";
 import Guidelines from "./pages/Guidelines";
 
 
-
+/**
+* Component that defines the app routes
+*/
 function App() {
   return (
     <Layout>

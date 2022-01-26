@@ -12,6 +12,9 @@ import ControlButtons from "../components/ControlButtons";
 import AppContext from '../store/AppContext.js';
 import useExitPrompt from "../components/hooks/useExitPrompt";
 
+/**
+* This is the main component of the application, it will handle all the other components.
+*/
 function TranscriptionTool() {
 
   const context = useContext(AppContext);
@@ -77,7 +80,7 @@ function TranscriptionTool() {
         <div>
           <Box style={{ maxHeight: "40rem", overflow: "auto", margin: "1rem" }}>
             {selectedData.map((clip) => (
-              <Clips key={clip.id} id={clip.id} transcribed={clip.transcribed}category={clipsToDisplay} updateaudio={handleClipClick}/>
+              <Clips key={clip.id} id={clip.id} transcribed={clip.transcribed} category={clipsToDisplay} updateAudio={handleClipClick}/>
             ))}
           </Box>
         </div>

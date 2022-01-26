@@ -7,6 +7,8 @@ import AppContext from '../store/AppContext.js';
 import Modal from './ui/Modal';
 import Backdrop from './ui/Backdrop';
 
+import PropTypes from 'prop-types';
+
 const baseStyle = {
     flex: 1,
     display: 'flex',
@@ -36,7 +38,16 @@ const baseStyle = {
     borderColor: '#ff1744'
   };
 
+  /**
+* Component for handling the file updload, both the .wav file and .zip file.
+*/
 function FileUpload(props){
+  FileUpload.propTypes = {
+    /** Function for changing the state of the transcription page ["start","loading","loaded"]. */
+    state: PropTypes.func,
+    /** Function for switching the channel category to Agent. */
+    toggleAgent: PropTypes.func
+    };
 
     const context = useContext(AppContext);
     const [ modalServerFailed, setModalServerFailed] = useState(false);
@@ -58,17 +69,82 @@ function FileUpload(props){
     }
     
 
-    const transcribe = useCallback((audio) => { 
+    const transcribe = useCallback((file) => { 
       
-      context.setAudioName(audio[0]["name"].slice(0, -4))
+      if(file[0]["name"].includes("WIP-") && file[0]["name"].includes(".zip")){
+
+        context.setAudioName(file[0]["name"].substring(4).slice(0, -4))
+        var zip = new JSZip();
+            zip.loadAsync(file[0]).then(function(zip){
+
+              zip.file("amout.clips.json").async("string").then(function (data){
+                let amoutClips = JSON.parse(data);
+                let totalAgentClips = amoutClips["agent_clips"];
+                let totalClientClips = amoutClips["client_clips"];
+
+                var agent_clips = [];
+                var client_clips = [];
+                let agentCounter = 0;
+                let clientCounter = 0;
+                let agentTranscribedTotal = 0;
+                let clientTranscribedTotal = 0;
+                Object.entries(zip.files).forEach((file) => {
+
+                  if(file[0].includes("Agent")){
+                    let transcribed = file[1]["name"][0] === "1" ? true : false;
+                    file[1]["name"] = file[1]["name"].substring(1).replace("Agent:",""); 
+                    agent_clips.push({"id": agentCounter, "file":file[1], "transcribed": transcribed});
+                    agentCounter++;
+                    if(transcribed){agentTranscribedTotal++;}
+                  }
+
+                  if(file[0].includes("Client")){
+                    let transcribed = file[1]["name"][0] === "1" ? true : false;
+                    file[1]["name"] = file[1]["name"].substring(1).replace("Client:",""); 
+                    client_clips.push({"id": clientCounter, "file":file[1], "transcribed": transcribed});
+                    clientCounter++;
+                    if(transcribed){clientTranscribedTotal++;}
+                  }
+
+                });
+
+                const status_data = {"agentDone": agentTranscribedTotal, "clientDone": clientTranscribedTotal, "agentTotal": totalAgentClips, "clientTotal": totalClientClips}
+
+                context.setWorkStatus(status_data);
+                context.setAgentAudios(agent_clips);
+                context.setClientAudios(client_clips);
+              });
+              
+
+              zip.file("agentOriginal.json").async("string").then(function (data){
+                context.setAgentOriginalTrans(JSON.parse(data));
+              });
+              zip.file("agentFixed.json").async("string").then(function (data){
+                context.setAgentFixedTrans(JSON.parse(data));
+              }); 
+              zip.file("clientOriginal.json").async("string").then(function (data){
+                context.setClientOriginalTrans(JSON.parse(data));
+              });
+              zip.file("clientFixed.json").async("string").then(function (data){
+                context.setClientFixedTrans(JSON.parse(data));
+              }); 
+
+              context.setDataIsLoaded(true);
+              props.state("loaded");
+              
+              
+            });
+
+      }else{
+      context.setAudioName(file[0]["name"].slice(0, -4))
       
       context.setDataIsLoaded(false);
       props.state("loading");
-      context.setCompleteRecording(URL.createObjectURL(audio[0]));
+      context.setCompleteRecording(URL.createObjectURL(file[0]));
  
   
       let formData = new FormData();
-      formData.append('file', audio[0]);
+      formData.append('file', file[0]);
       fetch('https://spartahearing-labelingtool-be-dev-yxglfl6iiq-uk.a.run.app/transcribe-file/',
         {
             method: "POST",
@@ -118,13 +194,14 @@ function FileUpload(props){
               });  
               
               
-            })
+            });
            
         })
         .catch(error => {
             props.state("start");
             setModalServerFailed(true);
         });
+      }
     
   }, [context, props]);
     
@@ -138,7 +215,7 @@ function FileUpload(props){
       }
       }, [props, transcribe, context.dataIsLoaded]);
 
-    const {getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject} = useDropzone({onDrop, acceptedFiles: "audio/*", maxFiles:1 })
+    const {getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject} = useDropzone({onDrop, acceptedFiles: "file/*", maxFiles:1 })
 
     const style = useMemo(() => ({
         ...baseStyle,

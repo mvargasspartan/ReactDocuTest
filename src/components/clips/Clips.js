@@ -1,16 +1,38 @@
 import CardClips from "../ui/CardClips";
 import classes from "../../styles/Clips.module.css";
+import PropTypes from 'prop-types';
 import {ReactComponent as CheckIcon} from '../../icons/check.svg';
 import {ReactComponent as PendingIcon} from '../../icons/pending.svg';
 import {useContext} from 'react';
 import AppContext from '../../store/AppContext.js';
 
+
+/**
+ * Component for rendering each audio clip interactive card.
+ * It gives a visual representation of the clip status (transcribed/pending).
+ */
 function Clips(props){
+    Clips.propTypes = {
+        /** Identifier for each clip. */
+        id: PropTypes.number,
+        /** Is the clip transcribed. */
+        transcribed: PropTypes.bool,
+        /** Channel category (Agent/Client). */
+        category: PropTypes.string,
+        /** Calls function *handleClipClick* of parent component *TranscriptionTool* */
+        updateAudio: PropTypes.func
+      };
+      
     const context = useContext(AppContext);
     let showSelected = false;
     const clipName = `${props.category} Clip ${props.id + 1}`;
 
-
+    /**
+    * This function resolves the transcription text, of both text areas, that should be displayed according to the selected clip.
+    * It also selects the corresponding audio file of the clip, so it can be properly loaded in the audio player.
+    *
+    * @public
+    */
     function toggleIsClicked(){
         let files;
         let generatedTranscription;
@@ -37,16 +59,18 @@ function Clips(props){
             if(fixedTranscription === ""){fixedTranscription="This clip doesn't have any associated transcription. Please consider deleting it."}
 
         }
+
         files.file.async("blob")
                 .then(function (data){
                     context.setCurrentClip(URL.createObjectURL(data));
-                    props.updateaudio();
+                    props.updateAudio();
                 });
         
         context.setSelectedTranscription({"generated": generatedTranscription, "fixed": fixedTranscription});
 
 
     }
+    
     let status;
     
 

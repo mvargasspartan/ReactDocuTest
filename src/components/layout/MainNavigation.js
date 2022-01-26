@@ -3,6 +3,10 @@ import {Link} from 'react-router-dom';
 import classes from '../../styles/MainNavigation.module.css'
 import {ReactComponent as SpartanLogo} from '../../icons/SpartaLogo.svg';
 
+/**
+* Component that handles the navigation links in the app's header (Transcription, Guidelines).
+* It doesn't contain props or methods.
+*/
 function MainNavigation() {
 
 
